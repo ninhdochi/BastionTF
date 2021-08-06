@@ -89,7 +89,7 @@ resource "aws_instance" "bastion" {
 
 resource "aws_security_group" "bastion-sg" {
   name   = "bastion-security-group"
-  vpc_id = "${aws_default_vpc.default.id}"
+  vpc_id = aws_vpc.bastion_vpc.id
 
   ingress {
     protocol    = "tcp"
