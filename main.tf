@@ -38,7 +38,7 @@ resource "aws_internet_gateway" "bastion_igw" {
 
 resource "aws_nat_gateway" "bastion_nat" {
   allocation_id = aws_eip.eib.id
-  subnet_id     = aws_subnet.public.id
+  subnet_id     = aws_subnet.bastion_public.id
 
   tags = {
     Name = "bastion_NAT"
