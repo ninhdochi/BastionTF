@@ -16,7 +16,68 @@ provider "aws" {
   secret_key = var.secret_key
 }
 
-resource "aws_default_vpc" "default" {}
+resource "aws_vpc" "bastion_vpc" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "bastion_vpc"
+  }
+}
+
+resource "aws_eip" "eib" {
+  vpc = true
+}
+
+resource "aws_internet_gateway" "bastion_igw" {
+  vpc_id = aws_vpc.bastion_vpc.id
+
+  tags = {
+    Name = "bastion_IGW"
+  }
+}
+
+resource "aws_nat_gateway" "bastion_nat" {
+  allocation_id = aws_eip.eib.id
+  subnet_id     = aws_subnet.public.id
+
+  tags = {
+    Name = "bastion_NAT"
+  }
+  # maintaining proper order
+  depends_on = [aws_internet_gateway.bastion_igw]
+}
+
+resource "aws_subnet" "bastion_public" {
+  vpc_id                  = aws_vpc.bastion_vpc.id
+  cidr_block              = "10.0.0.0/24"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "bastion_public"
+  }
+}
+
+resource "aws_subnet" "bastion_private" {
+  vpc_id     = aws_vpc.bastion_vpc.id
+  cidr_block = "10.0.1.0/24"
+
+  tags = {
+    Name = "bastion_private"
+  }
+}
+
+resource "aws_lb" "bastion_nlb" {
+  name              = "bastion_lb"
+  internal          = true
+  load_balance_type = "network"
+  subnets           = "aws_subnet.bastion_public.id"
+  
+  enable_deletion_protection = true
+  
+  tags = {
+    Name = "bastion_nlb"
+  }
+}
 
 resource "aws_instance" "bastion" {
   ami                         = "ami-969ab1f6"
