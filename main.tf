@@ -66,18 +66,18 @@ resource "aws_subnet" "bastion_private" {
   }
 }
 
-resource "aws_lb" "bastion_nlb" {
-  name               = "bastion-lb"
-  internal           = true
-  load_balancer_type = "network"
-  subnets            = aws_subnet.bastion_public.id
+#resource "aws_lb" "bastion_nlb" {
+#  name               = "bastion-lb"
+#  internal           = true
+#  load_balancer_type = "network"
+#  subnets            = aws_subnet.bastion_public.id
   
-  enable_deletion_protection = true
+#  enable_deletion_protection = true
   
-  tags = {
-    Name = "bastion_nlb"
-  }
-}
+#  tags = {
+#    Name = "bastion_nlb"
+#  }
+#}
 
 resource "aws_instance" "bastion" {
   ami                         = "ami-969ab1f6"
