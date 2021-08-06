@@ -67,10 +67,10 @@ resource "aws_subnet" "bastion_private" {
 }
 
 resource "aws_lb" "bastion_nlb" {
-  name              = "bastion_lb"
-  internal          = true
-  load_balance_type = "network"
-  subnets           = "aws_subnet.bastion_public.id"
+  name               = "bastion_lb"
+  internal           = true
+  load_balancer_type = "network"
+  subnets            = "aws_subnet.bastion_public.id"
   
   enable_deletion_protection = true
   
