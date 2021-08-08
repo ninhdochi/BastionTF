@@ -66,6 +66,32 @@ resource "aws_subnet" "bastion_private" {
   }
 }
 
+resource "aws_route_table" "bastion_public_rt" {
+  vpc_id = aws_vpc.bastion_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.bastion_igw.id
+  }
+
+  tags = {
+    Name = "bastion_public_rt"
+  }
+}
+
+resource "aws_route_table" "bastion_private_rt" {
+  vpc_id = aws_vpc.bastion_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.bastion_nat.id
+  }
+
+  tags = {
+    Name = "private_rt"
+  }
+}
+
 #resource "aws_lb" "bastion_nlb" {
 #  name               = "bastion-lb"
 #  internal           = true
