@@ -132,6 +132,17 @@ resource "aws_security_group" "bastion-sg" {
   }
 }
 
+resource "aws_route_table_association" "bastion_public_rta" {
+  subnet_id      = aws_subnet.bastion_public.id
+  route_table_id = aws_route_table.bastion_public_rt.id
+}
+
+resource "aws_route_table_association" "bastion_private_rta" {
+  subnet_id      = aws_subnet.bastion_private.id
+  route_table_id = aws_route_table.bastion_private_rt.id
+
+}
+
 output "bastion_public_ip" {
   value = "${aws_instance.bastion.public_ip}"
 }
